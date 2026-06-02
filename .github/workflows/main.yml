@@ -1,0 +1,19 @@
+name: Pipeline CI Esport FC
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-docker:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 📥 Récupérer le code source
+      uses: actions/checkout@v4
+
+    - name: 🐳 Construire l'image Docker Web
+      run: docker build -t app_esport_web .
+
+    - name: ✅ Validation de la Pipeline
+      run: echo "La compilation Docker est un succès ! Le code de l'équipe est valide."
