@@ -1,53 +1,38 @@
 #include <iostream>
-#include <string>
-
-// Codes ANSI pour les couleurs
-const std::string RESET = "\033[0m";
-const std::string BOLD = "\033[1m";
-const std::string RED = "\033[31m";
-const std::string BLUE = "\033[34m";
-const std::string GREEN = "\033[32m";
-const std::string YELLOW = "\033[33m";
-
-void afficherInterface(int scoreEquipe1, int scoreEquipe2) {
-    // Nettoie l'écran du terminal pour faire un effet de rafraîchissement
-    std::cout << "\033[2J\033[1;1H";
-    
-    std::cout << BOLD << YELLOW << "=========================================" << RESET << std::endl;
-    std::cout << BOLD << "      🏆 TOURNOI ESPORT - FINALE 🏆      " << RESET << std::endl;
-    std::cout << BOLD << YELLOW << "=========================================" << RESET << std::endl;
-    std::cout << "\n";
-    std::cout << "      " << BLUE << "DOMICILE" << RESET << "       VS       " << RED << "EXTÉRIEUR" << RESET << std::endl;
-    std::cout << "         " << BOLD << GREEN << scoreEquipe1 << RESET << "                 " << BOLD << GREEN << scoreEquipe2 << RESET << std::endl;
-    std::cout << "\n";
-    std::cout << BOLD << YELLOW << "=========================================" << RESET << std::endl;
-    std::cout << " 1. ⚽ But Domicile (+1)" << std::endl;
-    std::cout << " 2. ⚽ But Extérieur (+1)" << std::endl;
-    std::cout << " 3. 🛑 Fin du match (Quitter)" << std::endl;
-    std::cout << "=========================================" << std::endl;
-    std::cout << "▶ Choisissez une action (1, 2 ou 3) : ";
-}
+#include <thread>
+#include <chrono>
+#include <cstdlib>
+#include <ctime>
 
 int main() {
-    int score1 = 0;
-    int score2 = 0;
-    int choix = 0;
+    std::srand(std::time(0));
+    int scoreDomicile = 0;
+    int scoreExterieur = 0;
 
-    // Boucle interactive
-    while (choix != 3) {
-        afficherInterface(score1, score2);
-        std::cin >> choix;
+    std::cout << "[SYSTEME] Démarrage du serveur de match Esport en arrière-plan..." << std::endl;
 
-        if (choix == 1) {
-            score1++;
-        } else if (choix == 2) {
-            score2++;
+    // Boucle infinie : le match tourne tout seul comme un vrai serveur
+    for(int minute = 1; minute <= 90; minute += 5) {
+        std::cout << "[LOG] Minute du match : " << minute << "'" << std::endl;
+
+        int evenement = std::rand() % 10; // Génère un nombre entre 0 et 9
+
+        if (evenement == 1) {
+            scoreDomicile++;
+            std::cout << "[METRIC] BUT_DOMICILE | Score: " << scoreDomicile << " - " << scoreExterieur << std::endl;
+        } else if (evenement == 2) {
+            scoreExterieur++;
+            std::cout << "[METRIC] BUT_EXTERIEUR | Score: " << scoreDomicile << " - " << scoreExterieur << std::endl;
+        } else if (evenement == 3) {
+            std::cout << "[ALERTE] Carton Rouge distribué !" << std::endl;
+        } else {
+            std::cout << "[INFO] Possession de balle en cours..." << std::endl;
         }
+
+        // Le programme attend 2 secondes avant la prochaine action
+        std::this_thread::sleep_for(std::chrono::seconds(2));
     }
 
-    // Affichage final
-    std::cout << "\nCoup de sifflet final ! Score officiel : " 
-              << BOLD << BLUE << "Domicile " << score1 << RESET << " - " 
-              << BOLD << RED << score2 << " Extérieur" << RESET << "\n\n";
+    std::cout << "[SYSTEME] Fin du match. Arrêt du serveur." << std::endl;
     return 0;
 }
